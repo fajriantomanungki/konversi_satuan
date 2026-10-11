@@ -132,7 +132,7 @@ private fun KonversiApp(db: LocalDb) {
                             val bearer = "Bearer ${accessToken.trim()}"
                             when (role) {
                                 UserRole.SUPERVISOR -> api.submit(bearer, all.filter { !it.approved && it.kabupaten.equals(kabupaten, true) })
-                                UserRole.ADMIN -> { val pending = api.pending(bearer); dao.put(pending.conversions.map { it.copy(approved = false) }); api.approved(bearer).also { dao.put(it.conversions.map { row -> row.copy(approved = true) }) } }
+                                UserRole.ADMIN -> { api.importCatalog(bearer, ConversionFile(conversions = all.filter { it.approved && it.kabupaten.equals(kabupaten, true) })); val pending = api.pending(bearer); dao.put(pending.conversions.map { it.copy(approved = false) }); api.approved(bearer).also { dao.put(it.conversions.map { row -> row.copy(approved = true) }) } }
                                 UserRole.ENUMERATOR -> api.approved(bearer).also { dao.put(it.conversions.map { row -> row.copy(approved = true) }) }
                             }
                         }.onSuccess { message = "Sinkronisasi berhasil. Katalog lokal diperbarui." }.onFailure { message = "Sinkronisasi gagal: ${it.message}" }

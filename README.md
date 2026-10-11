@@ -50,7 +50,7 @@ export JWT_SECRET="gunakan-random-secret-minimal-32-karakter"
 python bootstrap_admin.py
 ```
 
-Admin membuat akun pengawas/petugas lewat `POST /v1/users` (Bearer admin) atau halaman dokumentasi interaktif `https://alamat-api/docs`. Login di `POST /v1/login` menghasilkan `accessToken`; salin token ke tab Sinkron di aplikasi. API hanya boleh dipakai lewat HTTPS saat deployment nyata. `JWT_SECRET` wajib diganti dan basis data `server/konversi.db` harus disimpan pada volume persisten. Dockerfile tersedia untuk membangun image server.
+Admin membuat akun pengawas/petugas lewat `POST /v1/users` (Bearer admin) atau halaman dokumentasi interaktif `https://alamat-api/docs`. Saat admin menekan Sinkronkan, katalog approved lokal wilayah tersebut dikirim ke API, lalu antrean review dan katalog approved dari server diambil. Login di `POST /v1/login` menghasilkan `accessToken`; salin token ke tab Sinkron di aplikasi. API hanya boleh dipakai lewat HTTPS saat deployment nyata. `JWT_SECRET` wajib diganti dan basis data `server/konversi.db` harus disimpan pada volume persisten. Dockerfile tersedia untuk membangun image server.
 
 Endpoint utama:
 
@@ -62,7 +62,7 @@ Endpoint utama:
 | `GET /v1/pending` | Admin | Mengambil catatan yang menunggu review |
 | `POST /v1/approve/{commodity}?quality=...&localUnit=...&standardUnit=...` | Admin | Rata-rata per komoditas, kualitas, dan pasangan satuan; menyetujui |
 | `GET /v1/approved` | Semua role | Mengambil katalog approved sesuai kabupaten akun |
-| `POST /v1/catalog/import` | Admin | Mengimpor file JSON katalog approved |
+| `POST /v1/catalog/import` | Admin | Mengimpor katalog approved sebagai JSON body; aplikasi admin mengirim katalog lokal saat sinkronisasi |
 
 ## Format transfer katalog
 

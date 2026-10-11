@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Literal
 import jwt
-from fastapi import Depends, FastAPI, Header, HTTPException, UploadFile, File
+from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel, Field
 
 DB_PATH = os.getenv("DATABASE_PATH", str(Path(__file__).with_name("konversi.db")))
@@ -168,12 +168,8 @@ def approved(user: User = Depends(current_user)):
     return Catalog(conversions=[record(r) for r in rows])
 
 @app.post("/v1/catalog/import", response_model=Catalog)
-def import_catalog(file: UploadFile = File(...), user: User = Depends(current_user)):
+def import_catalog(data: Catalog, user: User = Depends(current_user)):
     require(user, "admin")
-    try:
-        data = Catalog.model_validate_json(file.file.read())
-    except Exception as exc:
-        raise HTTPException(400, f"Invalid catalog JSON: {exc}")
     now = int(datetime.now(timezone.utc).timestamp()*1000)
     with connect() as db:
         for item in data.conversions:
