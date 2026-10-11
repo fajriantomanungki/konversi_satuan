@@ -150,6 +150,7 @@ private fun KonversiApp(db: LocalDb) {
     Spacer(Modifier.height(18.dp))
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable private fun CalculatorPage(rows: List<Conversion>, selected: Conversion?, onSelect: (Conversion) -> Unit, kabupaten: String) {
     var query by remember { mutableStateOf("") }; var quantity by remember { mutableStateOf("1") }; var price by remember { mutableStateOf("") }
     val filtered = rows.filter { it.kabupaten.equals(kabupaten, true) && (query.isBlank() || it.commodity.contains(query, true)) }
