@@ -19,7 +19,6 @@ data class Conversion(
     val contributors: Int = 1,
     val updatedAt: Long = System.currentTimeMillis()
 ) {
-    val normalizedName: String get() = commodity.trim().lowercase()
 }
 
 data class ConversionFile(val schemaVersion: Int = 1, val exportedAt: Long = System.currentTimeMillis(), val conversions: List<Conversion>)

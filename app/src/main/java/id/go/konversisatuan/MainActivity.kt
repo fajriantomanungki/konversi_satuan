@@ -105,7 +105,7 @@ private fun KonversiApp(db: LocalDb) {
                 0 -> CalculatorPage(all.filter { it.approved }, selected, { selected = it }, kabupaten)
                 1 -> if (role == UserRole.SUPERVISOR) EntryPage(all, kabupaten) { item -> scope.launch { dao.put(listOf(item)); message = "Data tersimpan sebagai draft untuk pemeriksaan admin." } } else CatalogPage(all.filter { it.approved })
                 2 -> if (role == UserRole.ADMIN) ReviewPage(all.filter { !it.approved }, { row -> scope.launch {
-                    val group = all.filter { !it.approved && it.normalizedName == row.normalizedName && it.quality.equals(row.quality, true) && it.localUnit.equals(row.localUnit, true) && it.standardUnit.equals(row.standardUnit, true) && it.kabupaten == row.kabupaten }
+                    val group = all.filter { !it.approved && it.commodity.trim().equals(row.commodity.trim(), true) && it.quality.equals(row.quality, true) && it.localUnit.equals(row.localUnit, true) && it.standardUnit.equals(row.standardUnit, true) && it.kabupaten == row.kabupaten }
                     val remote = if (serverUrl.startsWith("https://") && accessToken.isNotBlank()) runCatching {
                         val base = serverUrl.trim().let { if (it.endsWith("/")) it else "$it/" }
                         Retrofit.Builder().baseUrl(base).addConverterFactory(GsonConverterFactory.create()).build().create(SyncApi::class.java).approve("Bearer ${accessToken.trim()}", row.commodity, row.quality, row.localUnit, row.standardUnit).conversions
